@@ -1,9 +1,11 @@
+import os
 import re
 from ipaddress import ip_address
 from pathlib import Path
 from typing import Callable
 
 import redis.asyncio as redis
+import uvicorn
 from fastapi import FastAPI, Depends, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
@@ -105,3 +107,7 @@ async def healthchecker(db: AsyncSession = Depends(get_db)):
     except Exception as e:
         print(e)
         raise HTTPException(status_code=500, detail="Error connecting to the database")
+
+
+if __name__ == '__main__':
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)), log_level="info")
